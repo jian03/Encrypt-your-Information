@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title> 쌍자 암호 </title>
+    <script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
+    <link rel="stylesheet" type="text/css " href="\EYI\css\pairStyle.css">
+    <link rel="shortcut icon" href="\EYI\img\favicon.png">
+</head>
+
+<body>
+    <div class="front">
+        <button id="Pbtn1" onclick="location.href='main.html'"><b>쌍자 암호</b></button><br><br>
+        <div id="form1">
+            <label for="key">암호키</label>
+            <input type="text" id="key">
+            <label for="str"> 평문 </label>
+            <input type="text" id="str">
+            <button id="Prebtn" onclick="pairPlain()"><b>복호화</b></button>
+            <button id="Ppassbtn" onclick="pairPass()"><b>암호화</b></button>
+        </div>
+    </div>
+    <div class="end">
+        <button id="Pbtn1" onclick="location.href='main.html'"><b>쌍자 암호</b></button><br><br>
+        <div id="form2">
+            <label for="key1">암호키</label>
+            <input type="text" id="key1">
+            <label for="str1"> 평문 </label>
+            <input type="text" id="str1">
+            <label for="arr1">배열</label>
+            <div id="arr1"></div><br>
+            <label for="enc">암호문</label>
+            <input type="text" id="enc">
+            <label for="dec">복호문</label>
+            <input type="text" id="dec">
+            <button id="Prebtn2" onclick="pairPlain()"><b>복호화</b></button>
+            <button id="Ppassbtn2" onclick="pairPass()"><b>암호화</b></button>
+
+        </div>
+    </div>
+
+    <script>
+        var key = document.getElementById("key"); //암호키 요소를 변수 key에 저장
+        var str = document.getElementById("str"); //평문 요소를 변수 str에 저장
+        var arr = document.getElementById("arr1"); //배열 요소를 변수 arr에 저장
+        var enc = document.getElementById("enc"); //암호문 요소를 변수 enc에 저장
+        var alphabetBoard = Array(Array(5), Array(5), Array(5), Array(5), Array(5)); //암호판 값 설정 (5x5)
+        var keyForSet = "";
+        var blankCheck = ""; //빈칸 체크
+        var zCheck = "";
+        var oddFlag = false; // 
+        var enc_result = ""; // 암호화한 결과
+
+        function pairPass() {
+            dataPreprocessing();
+            setBoard();
+            setStr();
+            setArr();
+            strEncryption(key.value, str.value);
+            removeElements();
+        }
+
+        function dataPreprocessing() {
+            document.getElementById("key1").value = key.value;
+            document.getElementById("str1").value = str.value;
+
+            key.value = (key.value).toLowerCase();
+            str.value = (str.value).toLowerCase();
+            var RegExpHG = /[가-힣]/;
+            var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/gi;
+
+            if (regExp.test(str.value)) {
+                var t = (str.value).replace(regExp, "");
+                t = (str.value).replace(RegExpHG, "");
+                str.value = t;
+            }
+
+            if (regExp.test(key.value)) {
+                var t = (key.value).replace(regExp, "");
+                t = (key.value).replace(RegExpHG, "");
+                key.value = t;
+            }
+        }
+
+        function removeElements() {
+            $('div').remove('.front');
+            $('.end').css("display", "block");
+        }
+
+        function setArr() {
+            for (let i = 0; i < alphabetBoard.length; i++) {
+
+                for (let j = 0; j < alphabetBoard[i].length; j++) {
+                    arr.innerHTML += alphabetBoard[i][j] + "  ";
+                }
+                arr.innerHTML += "<br>";
+            }
+        }
+
+        //alphabetBoard 배열에 중복 없이 넣기
+        function setBoard() {
+            key.value = (key.value).replace(/ /g, "");
+            str.value = (str.value).replace(/ /g, "");
+            key.value = (key.value).toLowerCase();
+
+            var duplicationFlag = false; //중복 체크
+            var keyLengthCount = 0;
+
+            key.value += "abcdefghijklmnopqrstuvwxyz";
+
+            for (let i = 0; i < (key.value).length; i++) {
+
+                for (let j = 0; j < keyForSet.length; j++) {
+                    if ((key.value).charAt(i) === keyForSet.charAt(j)) {
+                        duplicationFlag = true;
+                        break;
+                    }
+
+                }
+                if (!(duplicationFlag)) keyForSet += (key.value).charAt(i);
+                duplicationFlag = false;
+            }
+            key.value = keyForSet;
+
+            for (let i = 0; i < alphabetBoard.length; i++) {
+                for (let j = 0; j < alphabetBoard[i].length; j++) {
+                    alphabetBoard[i][j] = keyForSet.charAt(keyLengthCount++);
+                }
+            }
+        }
+
+        function setStr() {
+            for (let i = 0; i < (str.value).length; i++) {
+                if ((str.value).charAt(i) == 'z')
+                {
+                    str.value = (str.value).substring(0, i) + 'q' + (str.value).substring(i + 1, (str.value).length);
+                    zCheck += 1;
+                }
+                else {
+                    zCheck += 0;
+                }
+            }
+        }
+
+        function strEncryption(key, str) {
+            var playFair = "";
+            var encPlayFair = "";
+            var x1 = 0, x2 = 0, y1 = 0, y2 = 0; 
+            var encStr = "";
+
+            for (let i = 0; i < str.length; i += 2) 
+            {
+                var tmpArr = new Array(2);
+                tmpArr[0] = str.charAt(i);
+
+                for (let j = 0; j < str.length; j++) {
+                    if (str.charAt(i) === str.charAt(i + 1)) //글이 반복되면 x추가
+                    {
+                        if (zCheck.charAt(i, 1) === '1' ^ zCheck.charAt(i + 1, 1) === '1') {
+                            console.log("둘이 xor");
+                            tmpArr = str.charAt(i + 1, 1);
+                        }
+                        else {
+                            tmpArr += 'x';
+                            i--;
+                        }
+                    }
+                    else {
+                        tmpArr[1] = str.charAt(i + 1);
+                    }
+                }
+                playFair += tmpArr;
+                playFair = playFair.replace(/,/gi, "");
+                console.log("1playFair : ", playFair);
+            }
+
+            if (playFair.length % 2 === 1) {
+                playFair += 'x';
+                oddFlag = true;
+            }
+           
+
+            for (let i = 0; i < playFair.length; i += 2) {
+                var tmpArr = new Array(2);
+                
+                if (playFair[i] === playFair[i + 1]) {
+                    if (zCheck.charAt(i, 1) === '1') {
+                        tmpArr[0] = 'q';
+                        tmpArr[1] = 'z';
+                    }
+                    else {
+                        tmpArr[0] = 'z';
+                        tmpArr[1] = 'q';
+                    }
+                    for (let j = 0; j < tmpArr.length; j++) {
+                        encPlayFair += tmpArr[j];
+                    }
+                    continue;
+                }
+
+                console.log("2playFair : ", playFair);
+
+                for (let j = 0; j < alphabetBoard.length; j++) 
+                {
+                    for (let k = 0; k < alphabetBoard[j].length; k++) {
+                        if (alphabetBoard[j][k] === playFair[i]) {
+                            x1 = j;
+                            y1 = k;
+                        }
+                        if (alphabetBoard[j][k] === playFair[i + 1]) {
+                            x2 = j;
+                            y2 = k;
+                        }
+                    }
+                }
+
+                if (x1 == x2) //행이 같은 경우
+                {
+                    tmpArr[0] = alphabetBoard[x1][(y1 + 1) % 5];
+                    tmpArr[1] = alphabetBoard[x2][(y2 + 1) % 5];
+                }
+                else if (y1 == y2) //열이 같은 경우
+                {
+                    tmpArr[0] = alphabetBoard[(x1 + 1) % 5][y1];
+                    tmpArr[1] = alphabetBoard[(x2 + 1) % 5][y2];
+                }
+                else //행, 열 모두 다른 경우
+                {
+                    tmpArr[0] = alphabetBoard[x2][y1];
+                    tmpArr[1] = alphabetBoard[x1][y2];
+                }
+
+                for (let i = 0; i < tmpArr.length; i++) {
+                    encPlayFair += tmpArr[i];
+                }
+                encPlayFair += " ";
+            }
+
+            for (let i = 0; i < encPlayFair.length; i++) {
+                encStr += encPlayFair[i][0] + "" + encPlayFair[i][1] + " ";
+            }
+            enc.value = encPlayFair;
+            enc_result = encPlayFair.replace(/ /gi, "");
+        }
+
+        function pairPlain() {
+            document.getElementById("dec").value = str1.value;
+        }
+    </script>
+</body>
+
+</html>

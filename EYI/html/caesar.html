@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> 시저 암호 </title>
+	<script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
+	<link rel="stylesheet" type="text/css " href="\EYI\css\caesarStyle.css">
+    <script type="text/javascript" src="\EYI\js\caesar.js"></script>
+	<link rel="shortcut icon" href="\EYI\img\favicon.png">
+</head>
+<body>
+	<div class="side">
+		<button id="Cbtn1" onclick="location.href='main.html'"><b>시저 암호</b></button>
+		<div class="Cformtag">
+			<form class="#">
+				<label for="CpassKey"> 암호키 </label>
+				<input type="text" id="CpassKey">
+				<label for="CplainT"> 평문 </label>
+				<input type="text" id="CplainT">
+                <label for="CPpassword"> 암호문 </label>
+                <p id="CPpassword"> </p>
+                <label> 암호판 </label>
+                <table id="CTable">
+                    <tr id="CTr1">
+                        <td id="al"> 원문자 </td>
+                        <td>a</td> <td>b</td> <td>c</td>
+                        <td>d</td> <td>e</td> <td>f</td>
+                        <td>g</td> <td>h</td> <td>i</td> 
+                        <td>j</td> <td>k</td> <td>l</td>
+                        <td>m</td> <td>n</td> <td>o</td>
+                        <td>p</td> <td>q</td> <td>r</td>
+                        <td>s</td> <td>t</td> <td>u</td>
+                        <td>v</td> <td>w</td> <td>x</td>
+                        <td>y</td> <td>z</td>
+                    </tr>
+
+                    <tr id="CTr2">
+                        <td id="al"> 대체 문자 </td>
+                        <td id="C1"> </td> <td id="C2"> </td>
+                        <td id="C3"> </td> <td id="C4"> </td>
+                        <td id="C5"> </td> <td id="C6"> </td>
+                        <td id="C7"> </td> <td id="C8"> </td>
+                        <td id="C9"> </td> <td id="C10"> </td>
+                        <td id="C11"> </td> <td id="C12"> </td>
+                        <td id="C13"> </td> <td id="C14"> </td>
+                        <td id="C15"> </td> <td id="C16"> </td>
+                        <td id="C17"> </td> <td id="C18"> </td>
+                        <td id="C19"> </td> <td id="C20"> </td>
+                        <td id="C21"> </td> <td id="C22"> </td>
+                        <td id="C23"> </td> <td id="C24"> </td>
+                        <td id="C25"> </td> <td id="C26"> </td>
+                    </tr>   
+                </table> <br>
+				<label for="plainC"> 복호문 </label>
+                <p id="plainC"> </p>
+			</form>
+		</div>
+		<button id="Crebtn" onclick="CarsarPlain()"><b> 복호화 </b></button>
+		<button id="Cpassbtn" onclick="CaesarPass()"><b> 암호화 </b></button>
+    </div>
+</div>
+</body>
+</html> 
